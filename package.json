@@ -1,0 +1,26 @@
+{
+    "name": "mp3-player",
+    "version": "0.0.1",
+    "description": "An electron based MP3 player",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tommyharlow/CS-361-SE.git"
+    },
+    "keywords": [
+        "mp3",
+        "player"
+    ],
+    "author": "Imap Usay",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/tommyharlow/CS-361-SE/issues"
+    },
+    "homepage": "https://github.com/tommyharlow/CS-361-SE#readme",
+    "devDependencies": {
+        "electron": "^24.2.0"
+    }
+}
