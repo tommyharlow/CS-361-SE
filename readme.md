@@ -1,9 +1,7 @@
-CS 361 MP3 Player Project
+# CS 361 MP3 Player Project
+## Group: Imap Usay
 
-Group: Imap Usay
-
-Members:
+**Members:**
 
 Nathaniel Thickett
-
 Sonny Box
