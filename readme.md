@@ -6,3 +6,5 @@
 Nathaniel Thickett
 
 Sonny Box
+
+Will Richards
