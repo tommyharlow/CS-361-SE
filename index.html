@@ -11,6 +11,8 @@
 
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
+        <link rel="stylesheet" type="text/css" href="styles.css">
+
         <title>Imap Player</title>
 
     </head>
@@ -22,14 +24,21 @@
         and Electron <span id="electron-version"></span>.
 
         <div>
-            <h2>v0.0.2</h2>
+            <h2>v0.0.3</h2>
             <button id="load-music-dir">Load Music Directory</button>
             <button id="prev">Previous</button>
             <button id="pause-play">Pause/Play</button>
             <button id="next">Next</button>
-            <button id="repeat">Repeat Off</button>
+            <button id="repeat">Repeat: off</button>
+            <!--Implement shuffling-->
+
+            <div id="time-elapsed">0:00</div>
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <button id="time-toggle">0:00</button>
+
             <audio id="audio-player"></audio>
         </div>
-
     </body>
 </html>

@@ -1,0 +1,12 @@
+#progress-bar-container {
+    width: 200px; /* or any desired fixed width */
+    height: 5px; /* adjust based on your design */
+    background-color: #aaa; /* non-transparent background */
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background-color: #007BFF; /* blue progress bar */
+}
+
