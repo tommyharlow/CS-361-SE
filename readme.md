@@ -3,10 +3,7 @@
 
 **Members:**
 
-Nathaniel Thickett
-
-Sonny Box
-
-Will Richards
-
-Jack Herbst
+- Nathaniel Thickett
+- Sonny Box
+- Will Richards
+- Jack Herbst

@@ -1,3 +1,4 @@
 /node_modules/
 /mp3-player-darwin-arm64/
+/mp3-player-win32-x64/
 .DS_Store

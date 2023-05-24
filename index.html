@@ -2,14 +2,34 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+
+        <!--
+        
+        Whitelist hostnames below:
+        
+        -->
+
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-        <title>Hello World!</title>
+
+        <title>Imap Player</title>
+
     </head>
     <body>
+
         <h1>Hello Imap Usay-ians</h1>
         We are using Node.js <span id="node-version"></span>,
         Chromium <span id="chrome-version"></span>,
         and Electron <span id="electron-version"></span>.
+
+        <div>
+            <h2>v0.0.2</h2>
+            <button id="load-music-dir">Load Music Directory</button>
+            <button id="prev">Previous</button>
+            <button id="pause-play">Pause/Play</button>
+            <button id="next">Next</button>
+            <button id="repeat">Repeat Off</button>
+            <audio id="audio-player"></audio>
+        </div>
+
     </body>
 </html>
