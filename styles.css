@@ -10,3 +10,6 @@
     background-color: #007BFF; /* blue progress bar */
 }
 
+#time-toggle{
+    float:right;
+}
