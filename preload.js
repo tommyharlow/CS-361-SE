@@ -79,6 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
             audioPlayer.src = musicFiles[currentFileIndex]
             audioPlayer.play()
             songLoaded = true
+            pausePlayButton.
         } else if (audioPlayer.paused) {
             audioPlayer.play()
         } else {
