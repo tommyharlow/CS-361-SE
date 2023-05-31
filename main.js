@@ -1,6 +1,20 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const path = require('path')
 const fs = require('fs')
+
+var menu = Menu.buildFromTemplate([
+    {
+        label: 'File',
+        submenu: [
+            {
+                label: "Load Directory",
+                click: () => loadDirectory(null)
+            }   
+        ]
+    }
+])
+
+Menu.setApplicationMenu(menu);
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -10,11 +24,10 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    win.setMenu(null);
     win.loadFile('index.html')
 }
 
-ipcMain.on('open-music-dir', async (event) => {
+async function loadDirectory(event){
     const result = await dialog.showOpenDialog({
         properties: ['openDirectory']
     })
@@ -35,7 +48,8 @@ ipcMain.on('open-music-dir', async (event) => {
             event.reply('loaded-music-dir', musicFiles) // Send the music files (array) to the renderer process
         })
     }
-})
+}
+ipcMain.on('open-music-dir', loadDirectory);
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
 })
