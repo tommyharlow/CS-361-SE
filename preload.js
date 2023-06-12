@@ -1,15 +1,6 @@
 const { ipcRenderer } = require('electron')
 
 window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-        const element = document.getElementById(selector)
-        if (element) element.innerText = text
-    }
-
-    for (const dependency of ['chrome', 'node', 'electron']) {
-        replaceText(`${dependency}-version`, process.versions[dependency])
-    }
-
     // Start of MP3 Player logic
 
     const loadMusicDirButton = document.getElementById('load-music-dir')
@@ -21,6 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const progressBarContainer = document.getElementById('progress-bar-container')
     const audioPlayer = document.getElementById('audio-player')
     const timeElapsed = document.getElementById('time-elapsed')
+    const fileName = document.getElementById('file-name');
     const timeToggleButton = document.getElementById('time-toggle')
 
     let updateInterval = null
@@ -60,6 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     loadMusicDirButton.addEventListener('click', () => {
         ipcRenderer.send('open-music-dir')
+        
     })
 
     progressBarContainer.addEventListener('click', (e) => {
@@ -77,6 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (!songLoaded) {
             audioPlayer.src = musicFiles[currentFileIndex]
+            fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
             audioPlayer.play()
             songLoaded = true
         } else if (audioPlayer.paused) {
@@ -94,6 +88,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         currentFileIndex = (currentFileIndex + 1) % musicFiles.length
         audioPlayer.src = musicFiles[currentFileIndex]
+        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
         audioPlayer.play()
         songLoaded = true
     })
@@ -113,6 +108,7 @@ window.addEventListener('DOMContentLoaded', () => {
             audioPlayer.currentTime = 0
         }
         audioPlayer.src = musicFiles[currentFileIndex]
+        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
         audioPlayer.play()
         songLoaded = true
 
@@ -168,9 +164,11 @@ window.addEventListener('DOMContentLoaded', () => {
     ipcRenderer.on('loaded-music-dir', (event, files) => {
         musicFiles = files
         currentFileIndex = 0
+        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
         songLoaded = false // Reset this variable when a new directory is loaded
         progressBar.style.width = '0'
         clearInterval(updateInterval)
         updateInterval = setInterval(updateTimeAndProgressBar, 1000)
+        
     });
 })

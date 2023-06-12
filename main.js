@@ -2,19 +2,7 @@ const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const path = require('path')
 const fs = require('fs')
 
-var menu = Menu.buildFromTemplate([
-    {
-        label: 'File',
-        submenu: [
-            {
-                label: "Load Directory",
-                click: () => loadDirectory(null)
-            }   
-        ]
-    }
-])
-
-Menu.setApplicationMenu(menu);
+Menu.setApplicationMenu(null);
 
 const createWindow = () => {
     const win = new BrowserWindow({
