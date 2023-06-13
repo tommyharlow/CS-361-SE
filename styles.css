@@ -1,3 +1,211 @@
+:root {
+    --margin: 8px;
+    --radius: 8px;
+    --accent: #007BFF;
+}
+
+@font-face {
+    font-family: icon;
+    src: url(./assets/HackNerdFontRegular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: display;
+    src: url(./assets/SFProRegular.ttf) format('truetype');
+}
+
+tr:hover {
+    background-color: #121212; /* Replace with your preferred color */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
+#media-buttons, #media-options, .metadata-icon {
+    font-family: icon;
+}
+
+.metadata-icon {
+    margin-right: var(--margin);
+}
+
+#song-title {
+    font-weight: bold;
+}
+
+#next-song {
+    margin-top: var(--margin);
+    font-size: 16px;
+    margin-left: var(--margin);
+}
+
+#song-details-next {
+    display: flex;
+    align-items: center;
+}
+
+#song-artist {
+    font-weight: lighter;
+}
+
+#song-artist, #song-title, #song-album {
+    margin-left: calc(var(--margin)/4);
+}
+
+a, a:hover, a:focus, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+#search-container {
+    color: white;
+}
+
+#player-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px; /* You can adjust this as per your requirements */
+    width: 70%; /* Adjust this as per the width of search-container */
+    background-color: #222222; /* Just to make it visible, you can change or remove it */
+    color: white;
+}
+
+#main-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70%; /* Adjust this as per the width of search-container */
+    height: calc(100vh - 50px); /* Subtract the height of player-controls */
+}
+
+#player-detail {
+    width: 50%;
+    height: 100%;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: var(--margin);
+}
+
+#queue {
+    display: flex;
+    width: 100%;
+    justify-content: right;
+    flex-direction: column;
+    padding: var(--margin);
+    padding-left: 0;
+}
+
+#queue-header {
+    font-family: display;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: var(--margin);
+    margin-left: 0;
+    margin-bottom: 0;
+}
+
+#queue-table {
+    width: 95%;
+    margin: var(--margin);
+    font-size: 10px;
+    color: yellow;
+}
+
+#queue-table-container {
+    overflow-y: auto;
+    max-height: 100%;
+    width: 100%;
+}
+
+#current-cover, #song-details, #up-next {
+    padding: var(--margin);
+    margin: var(--margin);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 50vh;
+}
+
+#current-cover {
+    background-color: #444455;
+}
+
+#song-details {
+    background-color: #556677;
+    color: white;
+    font-family: display;
+    font-size: 16px;
+}
+
+#up-next {
+    background-color: white;
+    color: black;
+    font-family: display;
+    font-size: 16px;
+}
+
+#up-next > a {
+    font-weight: bold;
+}
+
+#next-cover {
+    height: 48px;
+    width: 48px;
+    margin-top: var(--margin);
+}
+
+.album-cover {
+    border-radius: var(--radius);
+    width: 100%;
+}
+
+#player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#media-buttons, #media-time {
+    display: flex;
+    align-items: center;
+}
+
+#media-buttons button {
+    margin-right: 10px;
+}
+
+#progress-bar-container {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    background-color: #ddd;
+}
+
+#progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: #007bff; /* Blue by default, can be adjusted */
+}
+
+
+
+
+
+
 
 
 #progress-bar-container {
@@ -9,5 +217,63 @@
 #progress-bar {
     width: 0;
     height: 100%;
-    background-color: #007BFF; /* blue progress bar */
+    background-color: var(--accent);
+}
+
+#searchBox {
+    display: flex;
+    justify-content: space-between;
+    height: 36px;
+    margin: var(--margin);
+    border: 3px solid gray;
+    border-radius: var(--radius);
+}
+
+#searchBox:hover {
+    border: 3px solid var(--accent);
+}
+
+#searchResults {
+    margin: var(--margin);
+    padding: var(--margin);
+    border: 3px solid var(--accent);
+    border-radius: var(--radius);
+    font-family: display;
+    width: 360px;
+    height: auto;
+}
+
+#searchInput {
+    all: unset;
+    flex-grow: 1;
+    width: 100%;
+    font-family: display;
+    margin-left: var(--margin);
+    margin-right: var(--margin);
+}
+
+#searchResultTitle {
+    width: 75%;
+}
+
+#searchCancel {
+    align-self: flex-end;
+    font-family: icon;
+}
+
+#searchCancelButton {
+    all: unset;
+    cursor: pointer;
+    color: gray;
+    padding-bottom: 3px;
+    padding-right: 4px;
+}
+
+#searchIcon {
+    padding: 3px;
+    cursor: default;
+    padding-left: var(--margin);
+    padding-bottom: 0; 
+    color: gray;
+    font-family: icon;
 }

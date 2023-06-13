@@ -1,27 +1,116 @@
 const { ipcRenderer } = require('electron')
 
 window.addEventListener('DOMContentLoaded', () => {
-    // Start of MP3 Player logic
 
-    const loadMusicDirButton = document.getElementById('load-music-dir')
+    // Media Controls
+    const audioPlayer = document.getElementById('audio-player')
     const pausePlayButton = document.getElementById('pause-play')
     const nextButton = document.getElementById('next')
     const prevButton = document.getElementById('prev')
     const repeatButton = document.getElementById('repeat')
+
+    function stopPlaying() {
+        songPlaying = false
+        progressBar.style.width = '0'
+        audioPlayer.pause()
+        audioPlayer.src = null
+        timeElapsed.innerText = '0:00'
+        timeToggleButton.innerText = '0:00'
+        updateCover('clear')
+        updateMetadata('clear')
+    }
+
+    function startPlaying(status) {
+        if (status === 'next') {
+            currentSong = (currentSong + 1) % songs.length
+        } else if (status === 'prev') {
+            currentSong = (currentSong - 1 + songs.length) % songs.length
+        }
+        audioPlayer.src = songs[currentSong].path
+        audioPlayer.play()
+        updateCover()
+        updateMetadata()
+        songPlaying = true
+    }
+
+    pausePlayButton.addEventListener('click', () => {
+        if (checkSongs() === false) { return } 
+        if (!songPlaying) { startPlaying() } 
+        else if (audioPlayer.paused) { audioPlayer.play() } 
+        else { audioPlayer.pause() }
+    })
+
+    nextButton.addEventListener('click', () => {
+        if (checkSongs() === false) { return }
+        if (songRepeat === 'off') { stopPlaying() }
+        else { startPlaying('next') }
+    })
+
+    prevButton.addEventListener('click', () => {
+        if (checkSongs() === false) { return }
+        let now = Date.now()
+        if (now - prevButtonClickedAt < 2000) {
+            // If the button was clicked less than 2 seconds ago, go to the previous song
+            startPlaying('prev')
+        } else {
+            // Otherwise, restart the current song
+            audioPlayer.currentTime = 0
+        }
+        startPlaying()
+        prevButtonClickedAt = now
+    })
+
+    function checkSongs() {
+        if (!songs.length) {
+            ipcRenderer.send('show-dialog', {
+                title: 'Songs Not Found',
+                message: 'Your music directory has no compatible files or an \ninternal error has occurred.',
+                icon: './assets/alert.ico'
+            });
+            return false
+        }
+        return true
+    }
+
+    // Metadata
+    const albumCover = document.getElementById('album-cover-current')
+    const songTitle = document.getElementById('song-title')
+    const songAlbum = document.getElementById('song-album')
+    const songArtist = document.getElementById('song-artist')
+
+    function updateCover(status) {
+        if (songs[currentSong].cover) {
+            albumCover.src = 'data:image/jpeg;base64,' + songs[currentSong].cover;
+        } else {
+            albumCover.src = 'default.png';
+        }
+        if (status === 'clear') { albumCover.src = 'default.png'; }
+    }
+
+    function updateMetadata(status) {
+        songTitle.innerText = songs[currentSong].title
+        songAlbum.innerText = songs[currentSong].album
+        songArtist.innerText = songs[currentSong].artist
+
+        if (status === 'clear') {
+            songTitle.innerText = 'Song'
+            songAlbum.innerText = 'Album'
+            songArtist.innerText = ''
+        }
+    }
+
+    const loadMusicDirButton = document.getElementById('load-music-dir')
     const progressBar = document.getElementById('progress-bar')
     const progressBarContainer = document.getElementById('progress-bar-container')
-    const audioPlayer = document.getElementById('audio-player')
     const timeElapsed = document.getElementById('time-elapsed')
-    const fileName = document.getElementById('file-name');
     const timeToggleButton = document.getElementById('time-toggle')
 
     let updateInterval = null
-    let musicFiles = []
-    let currentFileIndex = 0
-    let songLoaded = false
-    let songRepeat = 'off'
+    let songPlaying = false
+    let songRepeat = 'loop'
     let prevButtonClickedAt = 0
     let displayRemainingTime = false
+    let repeatSymbol = ''
 
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60)
@@ -30,7 +119,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     const updateTimeAndProgressBar = () => {
-        if(audioPlayer.paused) return;
+        if (audioPlayer.paused) return;
 
         const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100
         progressBar.style.width = `${percentage}%`
@@ -44,6 +133,57 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function visualizeQueue(songs) {
+        // Find the table body in which you want to insert song rows.
+        let tbody = document.querySelector("#queue-table tbody");
+
+        // Iterate over the array of songs.
+        songs.forEach(song => {
+            // Create a new row for each song.
+            let tr = document.createElement("tr");
+
+            // Create and append a cell for the song cover.
+            let coverCell = document.createElement("td");
+            let img = document.createElement("img");
+
+            if (song.cover !== null) {
+                img.src = "data:image/jpeg;base64," + song.cover;
+            } else {
+                img.src = './default.png';
+            }
+            img.style.width = "32px";
+            img.style.height = "32px";
+            coverCell.appendChild(img);
+            tr.appendChild(coverCell);
+
+            // Create and append a cell for the song title.
+            let titleCell = document.createElement("td");
+            titleCell.textContent = song.title;
+            tr.appendChild(titleCell);
+
+            // Create and append a cell for the song artist.
+            let artistCell = document.createElement("td");
+            artistCell.textContent = song.artist;
+            tr.appendChild(artistCell);
+
+            // Create and append a cell for the song album.
+            let albumCell = document.createElement("td");
+            albumCell.className = 'song-album';
+            albumCell.textContent = song.album;
+            tr.appendChild(albumCell);
+
+            // Create and append a cell for the song duration.
+            let durationCell = document.createElement("td");
+            durationCell.className = 'song-duration';
+            durationCell.textContent = song.duration;
+            tr.appendChild(durationCell);
+
+            // Add the new row to the table body.
+            tbody.appendChild(tr);
+        });
+
+    }
+
     timeToggleButton.addEventListener('click', () => {
         displayRemainingTime = !displayRemainingTime
     })
@@ -51,83 +191,26 @@ window.addEventListener('DOMContentLoaded', () => {
     updateInterval = setInterval(updateTimeAndProgressBar, 1000)
 
     loadMusicDirButton.addEventListener('click', () => {
-        ipcRenderer.send('open-music-dir')
-        
+        ipcRenderer.send('switch-directory')
     })
 
     progressBarContainer.addEventListener('click', (e) => {
-        if (songLoaded) {
+        if (songPlaying) {
             const percentage = e.offsetX / progressBarContainer.offsetWidth
             audioPlayer.currentTime = audioPlayer.duration * percentage
         }    
-    })
-
-    pausePlayButton.addEventListener('click', () => {
-        if (!musicFiles.length) {
-            alert('dir_not_set or no_songs_found')
-            return
-        }
-
-        if (!songLoaded) {
-            audioPlayer.src = musicFiles[currentFileIndex]
-            fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
-            audioPlayer.play()
-            songLoaded = true
-        } else if (audioPlayer.paused) {
-            audioPlayer.play()
-        } else {
-            audioPlayer.pause()
-        }
-    })
-
-    nextButton.addEventListener('click', () => {
-        if (!musicFiles.length) {
-            alert('dir_not_set or no_songs_found')
-            return
-        }
-
-        currentFileIndex = (currentFileIndex + 1) % musicFiles.length
-        audioPlayer.src = musicFiles[currentFileIndex]
-        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
-        audioPlayer.play()
-        songLoaded = true
-    })
-
-    prevButton.addEventListener('click', () => {
-        if (!musicFiles.length) {
-            alert('dir_not_set or no_songs_found')
-            return
-        }
-
-        let now = Date.now()
-        if (now - prevButtonClickedAt < 2000) {
-            // If the button was clicked less than 2 seconds ago, go to the previous song
-            currentFileIndex = (currentFileIndex - 1 + musicFiles.length) % musicFiles.length
-        } else {
-            // Otherwise, restart the current song
-            audioPlayer.currentTime = 0
-        }
-        audioPlayer.src = musicFiles[currentFileIndex]
-        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
-        audioPlayer.play()
-        songLoaded = true
-
-        prevButtonClickedAt = now
     })
 
     audioPlayer.addEventListener('ended', () => {
         switch (songRepeat) {
             case 'off':
                 // If it's the last song in the playlist, stop playing
-                if (currentFileIndex + 1 === musicFiles.length) {
-                    audioPlayer.pause();
-                    songLoaded = false; // Set the song as unloaded
-                    progressBar.style.width = '0'; // Reset the progress bar
-                    return; // End the function here
+                if (currentSong + 1 === songs.length) {
+                    stopPlaying()
+                    return // End the function here
                 }
-
                 // If it's not the last song, go to the next one
-                currentFileIndex++;
+                currentSong++;
                 break;
             case 'one':
                 // Restart the current song
@@ -135,40 +218,38 @@ window.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'loop':
                 // Go to the next song, looping back to the start if it's the last one
-                currentFileIndex = (currentFileIndex + 1) % musicFiles.length;
+                currentSong = (currentSong + 1) % songs.length;
                 break;
         }
-
-        // Set and play the new song, and reset the progress bar
-        audioPlayer.src = musicFiles[currentFileIndex];
-        audioPlayer.play();
-        progressBar.style.width = '0';
+        startPlaying()
     });
-
 
     repeatButton.addEventListener('click', () => {
         switch (songRepeat) {
-            case 'off':
-                songRepeat = 'one';
-                break;
             case 'one':
-                songRepeat = 'loop';
+                repeatSymbol = '󰑗';
+                songRepeat = 'off'
                 break;
             case 'loop':
-                songRepeat = 'off';
+                repeatSymbol = '󰑘';
+                songRepeat = 'one'
+                break;
+            case 'off':
+                repeatSymbol = '󰑖';
+                songRepeat = 'loop'
                 break;
         }
-        repeatButton.textContent = `Repeat: ${songRepeat}`; // Change the text of the button
+        repeatButton.textContent = repeatSymbol;
     });
 
-    ipcRenderer.on('loaded-music-dir', (event, files) => {
-        musicFiles = files
-        currentFileIndex = 0
-        fileName.innerText = musicFiles[currentFileIndex].replace(/^.*[\\\/]/, '')
-        songLoaded = false // Reset this variable when a new directory is loaded
+    ipcRenderer.on('loaded-directory', (event, files) => {
+        songs = files
+        currentSong = 0
+        songPlaying = false
         progressBar.style.width = '0'
         clearInterval(updateInterval)
         updateInterval = setInterval(updateTimeAndProgressBar, 1000)
-        
+        stopPlaying()
+        visualizeQueue(songs)
     });
 })
