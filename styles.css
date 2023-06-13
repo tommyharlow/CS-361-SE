@@ -4,6 +4,16 @@
     --accent: #007BFF;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
 @font-face {
     font-family: icon;
     src: url(./assets/HackNerdFontRegular.ttf) format('truetype');
@@ -14,20 +24,159 @@
     src: url(./assets/SFProRegular.ttf) format('truetype');
 }
 
-tr:hover {
-    background-color: #121212; /* Replace with your preferred color */
-}
-
-body {
+#queue-table-container {
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    background-color: black;
+    width: 100%;
+    height: calc(100vh - 170px);
 }
 
-#media-buttons, #media-options, .metadata-icon {
+#queue-table {
+    margin-top: var(--margin);
+    font-family: display;
+    border-spacing: 0;
+    color: white;
+    padding: 4px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: block;
+    text-align: center;
+}
+
+
+#queue-table .song-cover { width: 10%; }
+#queue-table .song-title { width: 30%; }
+#queue-table .song-artist { width: 20%; }
+#queue-table .song-album { width: 20%; }
+#queue-table .song-duration { width: 20%; }
+
+/* Set the headers to all caps */
+#queue-table th {
+    text-transform: uppercase;
+    padding-bottom: var(--margin);
+}
+
+#queue-table tr {
+    font-size: 12px;
+}
+
+/* Set the style for every other row */
+#queue-table tbody tr:nth-child(odd) {
+    background-color: #222222;
+}
+
+/* Set the style for hovered rows */
+#queue-table tbody tr:hover {
+    background-color: #555555;
+}
+
+/* Style the scrollbar */
+#queue-table::-webkit-scrollbar {
+    width: 10px;
+}
+
+#queue-table::-webkit-scrollbar-track {
+    background: #222; 
+    border-radius: 10px;
+}
+
+#queue-table::-webkit-scrollbar-thumb {
+    background: white; 
+    border-radius: 10px;
+}
+
+
+/* Bar */
+
+#media-buttons button {
+    all: unset;
+    font-family: icon;
+    cursor: pointer;
+    color: white;
+}
+
+#media-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 160px;
+    align-items: center;
+    border: 2px solid white;
+    padding: var(--margin);
+    padding-left: 12px;
+    border-radius: var(--radius);
+}
+
+#media-buttons button:hover {
+    color: yellow;
+}
+
+#media-time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: var(--margin);
+    margin-right: calc(var(--margin)*2);
+    padding: var(--margin);
+    font-family: display;
+    font-weight: bolder;
+    border: 1px solid #cccccc;
+    border-radius: var(--radius);
+}
+
+#next {
+    margin-left: 2px;
+}
+
+#player-controls {
+    padding: var(--margin);
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    max-width: 100%;
+    background: none;
+    color: white;
+}
+
+#progress-bar-container {
+    margin: var(--margin);
+    position: relative;
+    width: 100%;
+    height: var(--margin);
+    border-radius: var(--radius);
+    background-color: #ddd;
+}
+
+#progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: yellow;
+    border-radius: var(--radius);
+}
+
+#time-toggle, #time-elapsed {
+    text-align: center;
+    width: 48px;
+}
+
+/* Main */
+
+#main-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: calc(100vh - 50px);
+}
+
+#media-options, .metadata-icon {
     font-family: icon;
 }
 
@@ -63,30 +212,7 @@ a, a:hover, a:focus, a:active {
     text-decoration: none;
 }
 
-#search-container {
-    color: white;
-}
-
-#player-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 50px; /* You can adjust this as per your requirements */
-    width: 70%; /* Adjust this as per the width of search-container */
-    background-color: #222222; /* Just to make it visible, you can change or remove it */
-    color: white;
-}
-
-#main-area {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 70%; /* Adjust this as per the width of search-container */
-    height: calc(100vh - 50px); /* Subtract the height of player-controls */
-}
-
 #player-detail {
-    width: 50%;
     height: 100%;
     background: none;
     display: flex;
@@ -94,6 +220,7 @@ a, a:hover, a:focus, a:active {
     align-items: center;
     flex-direction: column;
     padding: var(--margin);
+    margin: var(--margin);
 }
 
 #queue {
@@ -102,7 +229,9 @@ a, a:hover, a:focus, a:active {
     justify-content: right;
     flex-direction: column;
     padding: var(--margin);
-    padding-left: 0;
+    margin: var(--margin);
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #queue-header {
@@ -113,19 +242,6 @@ a, a:hover, a:focus, a:active {
     margin: var(--margin);
     margin-left: 0;
     margin-bottom: 0;
-}
-
-#queue-table {
-    width: 95%;
-    margin: var(--margin);
-    font-size: 10px;
-    color: yellow;
-}
-
-#queue-table-container {
-    overflow-y: auto;
-    max-height: 100%;
-    width: 100%;
 }
 
 #current-cover, #song-details, #up-next {
@@ -169,78 +285,19 @@ a, a:hover, a:focus, a:active {
     width: 100%;
 }
 
-#player-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-}
-
-#media-buttons, #media-time {
-    display: flex;
-    align-items: center;
-}
-
-#media-buttons button {
-    margin-right: 10px;
-}
-
-#progress-bar-container {
-    position: relative;
-    width: 100%;
-    height: 5px;
-    background-color: #ddd;
-}
-
-#progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0%;
-    background-color: #007bff; /* Blue by default, can be adjusted */
-}
-
-
-
-
-
-
-
-
-#progress-bar-container {
-    width: 200px; /* or any desired fixed width */
-    height: 5px; /* adjust based on your design */
-    background-color: #aaa; /* non-transparent background */
-}
-
-#progress-bar {
-    width: 0;
-    height: 100%;
-    background-color: var(--accent);
-}
-
 #searchBox {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
     height: 36px;
-    margin: var(--margin);
     border: 3px solid gray;
     border-radius: var(--radius);
+    margin-top: var(--margin);
 }
 
 #searchBox:hover {
     border: 3px solid var(--accent);
-}
-
-#searchResults {
-    margin: var(--margin);
-    padding: var(--margin);
-    border: 3px solid var(--accent);
-    border-radius: var(--radius);
-    font-family: display;
-    width: 360px;
-    height: auto;
 }
 
 #searchInput {
@@ -250,14 +307,10 @@ a, a:hover, a:focus, a:active {
     font-family: display;
     margin-left: var(--margin);
     margin-right: var(--margin);
-}
-
-#searchResultTitle {
-    width: 75%;
+    color: white;
 }
 
 #searchCancel {
-    align-self: flex-end;
     font-family: icon;
 }
 
@@ -265,15 +318,15 @@ a, a:hover, a:focus, a:active {
     all: unset;
     cursor: pointer;
     color: gray;
-    padding-bottom: 3px;
-    padding-right: 4px;
+    padding: var(--margin);
+    padding-right: calc(var(--margin)/2);
 }
 
 #searchIcon {
-    padding: 3px;
     cursor: default;
     padding-left: var(--margin);
-    padding-bottom: 0; 
     color: gray;
     font-family: icon;
+    padding: var(--margin);
+    padding-right: calc(var(--margin)/2);
 }

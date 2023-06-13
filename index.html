@@ -2,13 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <script src="https://kit.fontawesome.com/8b3bc87b26.js" crossorigin="anonymous"></script>
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="styles.css">
-        
         <title>Imap Player</title>
-
     </head>
     <body>
         <div id="player-controls">
@@ -16,19 +12,16 @@
                 <button id="prev"></button>
                 <button id="pause-play"></button>
                 <button id="next"></button>
+                <button id="repeat">󰑖</button>
+                <button id="shuffle">󰒝</button>
+                <button id="load-music-dir">󱍙&nbsp;</button>
             </div>
             <div id="media-time">
-                <div id="time-elapsed" class="pe-2">0:00</div>
+                <div id="time-elapsed">0:00</div>
                 <div id="progress-bar-container">
                     <div id="progress-bar" class="progress-bar"></div>
                 </div>
-                <div id="time-toggle" class="ps-2">0:00</div>
-                <div id="media-options">
-                    <button id="shuffle">󰒝</button>
-                    <button id="repeat">󰑖</button>
-                    <button id="load-music-dir">󱍙</button>
-                </div> 
-
+                <div id="time-toggle">0:00</div>
             </div>
         </div>
         <div id="main-area">
@@ -75,7 +68,7 @@
                     <table id="queue-table">
                         <thead>
                             <tr>
-                                <th>Cover</th>
+                                <th class="song-cover">Cover</th>
                                 <th class="song-title">Title</th>
                                 <th class="song-artist">Artist</th>
                                 <th class="song-album">Album</th>
@@ -83,7 +76,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Rows for songs will be inserted here by JavaScript -->
                         </tbody>
                     </table>
                 </div>

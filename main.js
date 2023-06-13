@@ -2,6 +2,26 @@ const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const path = require('path')
 const fs = require('fs')
 
+ipcMain.on('show-context-menu', (event, index) => {
+    const menu = Menu.buildFromTemplate([
+        {
+            label: 'Play Now',
+            click: () => {
+                event.sender.send('context-menu-command', 'play', index);
+            }
+        },
+        {
+            label: 'Remove from Queue',
+            click: () => {
+                event.sender.send('context-menu-command', 'remove', index);
+            }
+        },
+    ]);
+
+    const win = BrowserWindow.fromWebContents(event.sender);
+    menu.popup({ window: win });
+});
+
 async function getMusicMetadata(paths) {
     try {
         const musicMetadata = await import('music-metadata');
